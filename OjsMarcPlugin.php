@@ -1,6 +1,6 @@
 <?php
 /**
- * @file ojsMarc.inc.php
+ * @file OjsMarcPlugin.inc.php
  */
 
 namespace APP\plugins\importexport\ojsMarc;
@@ -39,43 +39,45 @@ class OjsMarcPlugin extends ImportExportPlugin
     }
 
     public function display($args, $request)
-    {
-        parent::display($args, $request);
+{
+    parent::display($args, $request);
 
-        // Get the journal, press or preprint server id
-        $contextId = Application::get()->getRequest()->getContext()->getId();
+    // Get the journal, press or preprint server id
+    $contextId = Application::get()->getRequest()->getContext()->getId();
 
-        // Use the path to determine which action
-        // should be taken.
-        $path = array_shift($args);
-        switch ($path) {
-
-            // Stream a CSV file for download
-            case 'exportAll':
+    // Use the path to determine which action
+    // should be taken.
+    $path = array_shift($args);
+    switch ($path) {
+        // Export the selected submission
+        case 'export':
+            $selectedSubmissionId = (int) $request->getUserVar('selectedSubmissionId');
+            $submission = Repo::submission()->get($selectedSubmissionId);
+            if ($submission && $submission->getStatus() === Submission::STATUS_PUBLISHED) {
                 header('content-type: text/comma-separated-values');
-                header('content-disposition: attachment; filename=articles-' . date('Ymd') . '.txt');
+                header('content-disposition: attachment; filename=submission-' . $submission->getId() . '.txt');
 
-                $submissions = $this->getAll($contextId);
+                $this->export(LazyCollection::make([$submission]), 'php://output');
+            } else {
+                // Handle case when submission is not found or not published
+                // Redirect or display an error message
+            }
+            break;
 
-                $this->export($submissions, 'php://output');
+        // Display the list of submissions for export
+        default:
+            $templateMgr = TemplateManager::getManager($request);
 
-                break;
+            $templateMgr->assign([
+                'pageTitle' => __('plugins.importexport.ojsMarc.name'),
+                'submissions' => $this->getAll($contextId),
+            ]);
 
-            // When no path is requested, display a list of submissions
-            // to export and a button to run the `exportAll` path.
-            default:
-                $templateMgr = TemplateManager::getManager($request);
-
-                $templateMgr->assign([
-                    'pageTitle' => __('plugins.importexport.ojsMarc.name'),
-                    'submissions' => $this->getAll($contextId),
-                ]);
-
-                $templateMgr->display(
-                    $this->getTemplateResource('export.tpl')
-                );
-        }
+            $templateMgr->display(
+                $this->getTemplateResource('export.tpl')
+            );
     }
+}
 
     public function executeCLI($scriptName, &$args)
     {
@@ -128,7 +130,8 @@ class OjsMarcPlugin extends ImportExportPlugin
                 $fp,
                 [
                     $submission->getId(),
-                    $submission->getCurrentPublication()->getLocalizedFullTitle()
+                    $submission->getCurrentPublication()->getLocalizedFullTitle(),
+                    $submission = 'xablau'
                 ]
             );
         }
