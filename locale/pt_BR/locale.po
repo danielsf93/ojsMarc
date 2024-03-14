@@ -1,0 +1,30 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"POT-Creation-Date: 2020-03-09T16:45:25+00:00\n"
+"PO-Revision-Date: 2020-03-09T16:45:25+00:00\n"
+"Language: \n"
+
+msgid "plugins.importexport.ojsMarc.name"
+msgstr "OJS MARC"
+
+msgid "plugins.importexport.ojsMarc.description"
+msgstr "Exportador de arquivos MARC para ALEPH da Exlibris"
+
+msgid "plugins.importexport.ojsMarc.id"
+msgstr "ID"
+
+msgid "plugins.importexport.ojsMarc.title"
+msgstr "Título"
+
+msgid "plugins.importexport.ojsMarc.exportAll"
+msgstr "Exportar todos"
+
+msgid "plugins.importexport.ojsMarc.cliUsage"
+msgstr "Uso: {$scriptName} {$pluginName} [csvFileName] [journalId]"

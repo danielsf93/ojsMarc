@@ -1,0 +1,39 @@
+{**
+ * templates/export.tpl
+ *
+ * Copyright (c) 2014-2020 Simon Fraser University
+ * Copyright (c) 2003-2020 John Willinsky
+ * Distributed under the GNU GPL v3. For full terms see the file LICENSE.
+ *
+ * @brief UI to export published submissions
+ *}
+{extends file="layouts/backend.tpl"}
+
+{block name="page"}
+	<h1 class="app__pageHeading">
+		{$pageTitle}
+	</h1>
+
+	<div class="app__contentPanel">
+		<table class="pkpTable">
+			<thead>
+				<tr>
+					<th>{translate key="plugins.importexport.ojsMarc.id"}</th>
+					<th>{translate key="plugins.importexport.ojsMarc.title"}</th>
+				</tr>
+			</thead>
+			<tbody>
+				{foreach $submissions as $submission}
+					<tr>
+						<td>{$submission->getId()}</td>
+						<td>{$submission->getCurrentPublication()->getLocalizedFullTitle()}</td>
+					</tr>
+				{/foreach}
+			</tbody>
+		</table>
+
+		<form method="POST" action="{plugin_url path="exportAll"}">
+			<button class="pkp_button" type="submit">{translate key="plugins.importexport.ojsMarc.exportAll"}</button>
+		</form>
+	</div>
+{/block}
