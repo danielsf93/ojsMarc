@@ -120,7 +120,9 @@ class OjsMarcPlugin extends ImportExportPlugin
      * to a CSV file
      */
     public function export(LazyCollection $submissions, $filename)
+    
     {
+        $teste = "ronaldo";
         $fp = fopen($filename, 'wt');
         fputcsv($fp, ['ID', 'Title']);
 
@@ -131,7 +133,10 @@ class OjsMarcPlugin extends ImportExportPlugin
                 [
                     $submission->getId(),
                     $submission->getCurrentPublication()->getLocalizedFullTitle(),
-                    $submission = 'xablau'
+                    $submissionA = 'xablau',
+                    $teste,
+                    $submission->getCurrentPublication()->getLocalizedData('keywords'),
+                    $submission->getCurrentPublication()->getLocalizedData('abstract')
                 ]
             );
         }
