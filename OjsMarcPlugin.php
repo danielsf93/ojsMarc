@@ -1,6 +1,6 @@
 <?php
 /**
- * @file OjsMarcPlugin.inc.php
+ * @file ojs-3.4.0-4/plugins/importexport/ojsMarc/OjsMarcPlugin.inc.php
  */
 
 namespace APP\plugins\importexport\ojsMarc;
@@ -55,7 +55,7 @@ class OjsMarcPlugin extends ImportExportPlugin
             $submission = Repo::submission()->get($selectedSubmissionId);
             if ($submission && $submission->getStatus() === Submission::STATUS_PUBLISHED) {
                 header('content-type: text/comma-separated-values');
-                header('content-disposition: attachment; filename=submission-' . $submission->getId() . '.txt');
+                header('content-disposition: attachment; filename=ojs' . '.txt');
 
                 $this->export(LazyCollection::make([$submission]), 'php://output');
             } else {
@@ -115,32 +115,48 @@ class OjsMarcPlugin extends ImportExportPlugin
             ->getMany();
     }
 
-    /**
-     * A helper method to stream all published submissions
-     * to a CSV file
-     */
     public function export(LazyCollection $submissions, $filename)
-    
-    {
-        $teste = "ronaldo";
-        $fp = fopen($filename, 'wt');
-        fputcsv($fp, ['ID', 'Title']);
+{
+    $fp = fopen($filename, 'wt');
 
-        /** @var Submission $submission */
-        foreach ($submissions as $submission) {
-            fputcsv(
-                $fp,
-                [
-                    $submission->getId(),
-                    $submission->getCurrentPublication()->getLocalizedFullTitle(),
-                    $submissionA = 'xablau',
-                    $teste,
-                    $submission->getCurrentPublication()->getLocalizedData('keywords'),
-                    $submission->getCurrentPublication()->getLocalizedData('abstract')
-                ]
-            );
-        }
-
-        fclose($fp);
+    foreach ($submissions as $submission) {
+        $dados = $this->dados($submission);
+        fwrite($fp, $dados . PHP_EOL); // Adiciona quebra de linha ao final de cada entrada
     }
+
+    fclose($fp);
+}
+    
+public function dados($submission)
+{
+    $teste = "ronaldo";
+    $keywords = $submission->getCurrentPublication()->getLocalizedData('keywords');
+    $keywordsString = is_array($keywords) ? implode(', ', $keywords) : ''; // Converter array em string
+
+    // Palavras fixas e quebras de linha
+    $fixedWords = [
+        'ID: ' . $submission->getId(),
+        'Título: ' . $submission->getCurrentPublication()->getLocalizedFullTitle(),
+    ];
+
+    // Adiciona keywords se houver
+    if ($keywordsString !== '') {
+        $fixedWords[] = 'Palavras chave: ' . $keywordsString;
+    } else {
+        $fixedWords[] = 'Palavras chave: N/A';
+    }
+
+    // Palavras fixas restantes com quebras de linha
+    $fixedWords[] = 'Meu textoa: texto01';
+    $fixedWords[] = 'Meu textob: texto02';
+    $fixedWords[] = 'Meu textoc: ' . $teste;
+
+    return implode(PHP_EOL, $fixedWords); // Retorna array de strings
+}
+
+
+
+    
+    
+    
 }

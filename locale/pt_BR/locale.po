@@ -28,3 +28,6 @@ msgstr "Exportar todos"
 
 msgid "plugins.importexport.ojsMarc.cliUsage"
 msgstr "Uso: {$scriptName} {$pluginName} [csvFileName] [journalId]"
+
+msgid "plugins.importexport.ojsMarc.exportSelected"
+msgstr "Exportar Artigo"
